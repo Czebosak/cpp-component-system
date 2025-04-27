@@ -1,0 +1,40 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 19,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "debug",
+        "hidden": false,
+        "generator": "Ninja",
+        "description": "Use this for debugging",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "release",
+        "hidden": false,
+        "generator": "Ninja",
+        "description": "Use this for release build with -O3",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release",
+          "PRODUCTION_BUILD": "ON"
+        }
+      }
+    ],
+    "buildPresets": [
+      {
+        "name": "debug",
+        "configurePreset": "debug"
+      },
+      {
+        "name": "release",
+        "configurePreset": "release"
+      }
+    ]
+  }
+  
