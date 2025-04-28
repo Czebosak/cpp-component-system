@@ -5,8 +5,13 @@
 #include <world.hpp>
 
 class DataComponent : public Component {
-public:
     std::string x = "hi brotha";
+public:
+    DataComponent(std::string&& x) : x(x) {}
+
+    std::string& get_x() {
+        return x;
+    }
 };
 
 class HelloWorldComponent : public Component {
@@ -14,18 +19,14 @@ public:
     void process(Entity& entity) override {
         auto& component = entity.get_component<DataComponent>();
 
-        std::cout << "Hi " << component.x << std::endl;
+        std::cout << "Hi " << component.get_x() << std::endl;
     }
 };
 
 int main() {
     World world;
 
-    std::vector<std::unique_ptr<Component>> components;
-    components.emplace_back(std::make_unique<HelloWorldComponent>());
-    components.emplace_back(std::make_unique<DataComponent>());
-
-    world.add_entity_with_components(std::move(components));
+    world.add_entity_with_component<HelloWorldComponent>().add_component<DataComponent>("x3");
 
     while (true) {
         world.process();

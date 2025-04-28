@@ -10,11 +10,22 @@ private:
 public:
     void process();
 
-    void add_entity(Entity entity) {
-        entities.emplace_back(std::move(entity));
+    Entity& add_entity(Entity entity) {
+        return entities.emplace_back(std::move(entity));
     }
 
-    void add_entity_with_components(std::vector<std::unique_ptr<Component>>&& components, Entity::ProcessMode process_mode = Entity::ProcessMode::ALWAYS) {
-        entities.emplace_back(std::move(components), process_mode);
+    template<typename ComponentType, typename... Args>
+    Entity& add_entity_with_component(Args&&... args) {
+        static_assert(std::is_base_of<Component, ComponentType>::value, "ComponentType must derive from Component");
+
+        Entity& entity = entities.emplace_back();
+        entity.add_component<ComponentType>(std::forward<Args>(args)...);
+        return entity;
+    }
+
+    Entity& add_entity_with_components(std::vector<std::unique_ptr<Component>>&& components, Entity::ProcessMode process_mode = Entity::ProcessMode::ALWAYS) {
+        Entity& entity = entities.emplace_back(process_mode);
+        entity.add_components(std::move(components));
+        return entity;
     }
 };

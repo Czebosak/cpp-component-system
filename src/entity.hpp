@@ -21,10 +21,6 @@ public:
 
     Entity(ProcessMode process_mode = ProcessMode::ALWAYS) : process_mode(process_mode) {}
 
-    Entity(std::vector<std::unique_ptr<Component>>&& components, ProcessMode process_mode = ProcessMode::ALWAYS) : process_mode(process_mode)  {
-        add_components(std::move(components));
-    }
-
     ProcessMode process_mode;
 
     void process();
@@ -57,7 +53,16 @@ public:
         this->components.emplace(component->get_name(), std::move(component));
     }
 
+    template<typename ComponentType, typename... Args>
+    void add_component(Args&&... args) {
+        static_assert(std::is_base_of<Component, ComponentType>::value, "ComponentType must derive from Component");
+
+        this->components.emplace(StringName(typeid(ComponentType).name()), std::make_unique<ComponentType>(std::forward<Args>(args)...));
+    }
+
     void add_components(std::vector<std::unique_ptr<Component>>&& components) {
+        this->components.reserve(components.size());
+
         for (auto&& component : components) {
             this->components.emplace(component->get_name(), std::move(component));
         }
