@@ -2,31 +2,37 @@
 #include <vector>
 #include <memory>
 
+#include <event.hpp>
 #include <world.hpp>
 
 class DataComponent : public Component {
-    std::string x = "hi brotha";
+    std::string str;
 public:
-    DataComponent(std::string&& x) : x(x) {}
+    Event<std::string&> print_event;
 
-    std::string& get_x() {
-        return x;
+    DataComponent(const std::string&& str) : str(std::move(str)) {}
+
+    void process(Entity& entity) override {
+        print_event.trigger(str);
     }
 };
 
 class HelloWorldComponent : public Component {
 public:
-    void process(Entity& entity) override {
-        auto& component = entity.get_component<DataComponent>();
+    void added_to_entity(Entity& entity) {
+        auto& data_component = entity.get_component<DataComponent>();
+        data_component.print_event.subscribe(this, std::bind(&HelloWorldComponent::print, this, std::placeholders::_1));
+    }
 
-        std::cout << "Hi " << component.get_x() << std::endl;
+    void print(const std::string& str) {
+        std::cout << "Hi " << str << std::endl;
     }
 };
 
 int main() {
     World world;
 
-    world.add_entity_with_component<HelloWorldComponent>().add_component<DataComponent>("x3");
+    world.add_entity_with_component<DataComponent>("x3").add_component<HelloWorldComponent>();
 
     while (true) {
         world.process();

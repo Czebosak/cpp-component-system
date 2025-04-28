@@ -17,5 +17,7 @@ public:
         return *name;
     }
 
+    virtual void added_to_entity(Entity& entity) {}
+
     virtual void process(Entity& entity) {}
 };

@@ -51,13 +51,16 @@ public:
 
     void add_component(std::unique_ptr<Component> component) {
         this->components.emplace(component->get_name(), std::move(component));
+        component->added_to_entity(*this);
     }
 
     template<typename ComponentType, typename... Args>
     void add_component(Args&&... args) {
         static_assert(std::is_base_of<Component, ComponentType>::value, "ComponentType must derive from Component");
 
-        this->components.emplace(StringName(typeid(ComponentType).name()), std::make_unique<ComponentType>(std::forward<Args>(args)...));
+        auto pair = components.emplace(StringName(typeid(ComponentType).name()), std::make_unique<ComponentType>(std::forward<Args>(args)...));
+        auto& component = pair.first->second;
+        component->added_to_entity(*this);
     }
 
     void add_components(std::vector<std::unique_ptr<Component>>&& components) {
