@@ -6,6 +6,8 @@
 
 #include <component.hpp>
 
+#define BIND_EVENT_CALLBACK(callback) this, [this](auto&&... args) { this->callback(std::forward<decltype(args)>(args)...); }
+
 template<typename... Args>
 class Event {
 public:

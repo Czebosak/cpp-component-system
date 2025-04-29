@@ -8,7 +8,7 @@
 class DataComponent : public Component {
     std::string str;
 public:
-    Event<std::string&> print_event;
+    Event<const std::string&> print_event;
 
     DataComponent(const std::string&& str) : str(std::move(str)) {}
 
@@ -21,7 +21,7 @@ class HelloWorldComponent : public Component {
 public:
     void added_to_entity(Entity& entity) {
         auto& data_component = entity.get_component<DataComponent>();
-        data_component.print_event.subscribe(this, std::bind(&HelloWorldComponent::print, this, std::placeholders::_1));
+        data_component.print_event.subscribe(BIND_EVENT_CALLBACK(print));
     }
 
     void print(const std::string& str) {
