@@ -13,7 +13,7 @@ class Event {
 public:
     using Callback = std::function<void(Args...)>;
 private:
-    std::unordered_map<Component*, Callback> listeners;
+    std::unordered_multimap<Component*, Callback> listeners;
 public:
 
     void subscribe(Component* listener, const Callback& callback) {

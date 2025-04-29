@@ -22,10 +22,15 @@ public:
     void added_to_entity(Entity& entity) {
         auto& data_component = entity.get_component<DataComponent>();
         data_component.print_event.subscribe(BIND_EVENT_CALLBACK(print));
+        data_component.print_event.subscribe(BIND_EVENT_CALLBACK(print2));
     }
 
     void print(const std::string& str) {
         std::cout << "Hi " << str << std::endl;
+    }
+
+    void print2(const std::string& str) {
+        std::cout << "Hello " << str << std::endl;
     }
 };
 
