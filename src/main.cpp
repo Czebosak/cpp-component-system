@@ -4,6 +4,7 @@
 
 #include <event.hpp>
 #include <world.hpp>
+#include <system.hpp>
 
 class DataComponent : public Component {
     std::string str;
@@ -33,6 +34,8 @@ public:
         std::cout << "Hello " << str << std::endl;
     }
 };
+
+SYSTEM_DEFINE(skibidi_system, Query<Component>) {}
 
 int main() {
     World world;

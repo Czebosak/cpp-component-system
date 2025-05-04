@@ -2,11 +2,13 @@
 #include <vector>
 #include <memory>
 
+#include <system_definition.hpp>
 #include <entity.hpp>
 
 class World {
 private:
     std::vector<Entity> entities;
+    std::vector<ecs::System> systems;
 public:
     void process();
 
