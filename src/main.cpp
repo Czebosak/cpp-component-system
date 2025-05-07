@@ -21,8 +21,8 @@ class HelloWorldComponent : public Component {
 public:
     void added_to_entity(Entity& entity) {
         auto& data_component = entity.get_component<DataComponent>();
-        data_component.print_event.subscribe(BIND_EVENT_CALLBACK(print));
-        data_component.print_event.subscribe(BIND_EVENT_CALLBACK(print2));
+        EVENT_SUBSCRIBE(data_component.print_event, print);
+        EVENT_SUBSCRIBE(data_component.print_event, print2);
     }
 
     void print(const std::string& str) {
@@ -39,7 +39,7 @@ int main() {
 
     world.add_entity_with_component<DataComponent>("x3").add_component<HelloWorldComponent>();
 
-    while (true) {
+    while (false) {
         world.process();
     }
 

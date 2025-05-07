@@ -7,6 +7,7 @@
 class Component;
 
 #define BIND_EVENT_CALLBACK(callback) this, [this](auto&&... args) { this->callback(std::forward<decltype(args)>(args)...); }
+#define EVENT_SUBSCRIBE(event, callback) event.subscribe(BIND_EVENT_CALLBACK(callback)); register_event(event)
 
 template<typename... Args>
 class Event {
